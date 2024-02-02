@@ -36,22 +36,45 @@ client.on(`messageCreate`, async(message) => {
         message.channel.sendTyping();
     }, 5000);
 
-    // logs of convo
+    // logs of convos
+    let conversation = [];
+    
+    conversation.push({
+        role: `system`,
+        content: `Chat GPT is a snarky chatbot.`,
+    });
+
+    let prevMessages = await message.channel.messages.fetch({ limit: 10});
+    prevMessages.reverse();
+
+    prevMessages.forEach((msg) => {
+        if (message.author.bot && msg.user.id !== client.user.id) return;
+        if (message.content.startsWith(IGNORE_PREFIX)) return;
+
+        const username = msg.author.username.replace(/\s+/g, '_').replace(/[^\w\s]/gi, '');
+
+        if (msg.author.id === client.user.id) {
+            conversation.push({
+                role: 'assistant',
+                name: username,
+                content: msg.content,
+            });
+
+            return;
+        }
+
+        conversation.push({
+            role: `user`,
+            name: username,
+            content: msg.content,
+        });
+
+
+    })
 
     const response = await openai.chat.completions.create({
         model: `gpt-3.5-turbo`,
-        messages: [
-            {
-                // name: 
-                role: `system`,
-                content: `Chat GPT is a friendly chatbot.`,
-            },
-            {
-                // name: 
-                role: `user`,
-                content: message.content,
-            }
-        ]
+        messages: conversation,
     })
     .catch((error) => console.error(`Open AI Error:\n`, error));
 
@@ -63,7 +86,15 @@ client.on(`messageCreate`, async(message) => {
         return;
     }
 
-    message.reply(response.choices[0].message.content);
+    const responseMessage = response.choices[0].message.content;
+    const chunkSizeLimit = 2000;
+
+    for (let i = 0; i < chunkSizeLimit; i++) {
+        const chunk = responseMessage.substring(i, i + chunkSizeLimit);
+
+        await message.reply(chunk);
+    }
+    
 });
 
 
