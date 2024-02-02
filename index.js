@@ -89,7 +89,7 @@ client.on(`messageCreate`, async(message) => {
     const responseMessage = response.choices[0].message.content;
     const chunkSizeLimit = 2000;
 
-    for (let i = 0; i < chunkSizeLimit; i++) {
+    for (let i = 0; i < chunkSizeLimit; i += chunkSizeLimit) {
         const chunk = responseMessage.substring(i, i + chunkSizeLimit);
 
         await message.reply(chunk);
