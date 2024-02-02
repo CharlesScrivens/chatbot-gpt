@@ -10,12 +10,25 @@ const client = new Client({intents: [
 ]})
 
 // Prepare connection to OpenAI API
-const {Configuration, OpenAIApi} = require('openai');
-const configuration = new Configuration({
-    organization: process.env.OPENAI_ORG,
-    apiKey: process.env.OPENAI_KEY
-});
+// const {Configuration, OpenAIApi} = require('openai');
+// const configuration = new Configuration({
+//     organization: process.env.OPENAI_ORG,
+//     apiKey: process.env.OPENAI_KEY
+// });
 
-const openai = new OpenAIApi(configuration);
+// const openai = new OpenAIApi(configuration);
 
 // Check for when a message is sent
+client.on('messageCreate', async function(message){
+    try {
+        if(message.author.bot) return;
+        console.log(message.content);
+        message.reply(`You said: ${message.content}`);
+    } catch (err){
+        console.log(err);
+    }
+});
+
+// Log the bot into Discord
+client.login(process.env.DISCORD_TOKEN);
+console.log("BOT IS ONLINE");
