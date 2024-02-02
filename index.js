@@ -11,7 +11,7 @@ client.on(`ready`, () => {
     console.log(`The bot is on`);
 });
 
-//to ignore stuff
+//to prompt the bot
 const COMMAND_PREFIX = "!";
 const CHANNELS = [`1202769547048788008`];
 
@@ -49,7 +49,7 @@ client.on(`messageCreate`, async(message) => {
 
     prevMessages.forEach((msg) => {
         if (message.author.bot && msg.user.id !== client.user.id) return;
-        if (message.content.startsWith(IGNORE_PREFIX)) return;
+        if (message.content.startsWith(COMMAND_PREFIX)) return;
 
         const username = msg.author.username.replace(/\s+/g, '_').replace(/[^\w\s]/gi, '');
 
@@ -99,4 +99,3 @@ client.on(`messageCreate`, async(message) => {
 
 
 client.login(process.env.DISCORD_TOKEN);
-
