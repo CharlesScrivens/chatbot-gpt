@@ -12,7 +12,7 @@ client.on(`ready`, () => {
 });
 
 //to prompt the bot
-const COMMAND_PREFIX = "!";
+const IGNORE_PREFIX = "!";
 const CHANNELS = [`1202769547048788008`];
 
 // define openai 
@@ -26,7 +26,7 @@ client.on(`messageCreate`, async(message) => {
     // check if responding to bot, if ignore is on, or if it's in right channel before responding
     // and needs to ping the bot
     if (message.author.bot) return;
-    if (!message.content.startsWith(COMMAND_PREFIX)) return;
+    if (!message.content.startsWith(IGNORE_PREFIX)) return;
     if (!CHANNELS.includes(message.channelId) && !message.mentions.users.has(client.user.id)) return;
 
     // looks like the bot is typing
@@ -41,7 +41,7 @@ client.on(`messageCreate`, async(message) => {
     
     conversation.push({
         role: `system`,
-        content: `Chat GPT is a snarky chatbot.`,
+        content: `Chat GPT is a helpful bot`,
     });
 
     let prevMessages = await message.channel.messages.fetch({ limit: 10});
@@ -49,7 +49,7 @@ client.on(`messageCreate`, async(message) => {
 
     prevMessages.forEach((msg) => {
         if (message.author.bot && msg.user.id !== client.user.id) return;
-        if (message.content.startsWith(COMMAND_PREFIX)) return;
+        if (message.content.startsWith(IGNORE_PREFIX)) return;
 
         const username = msg.author.username.replace(/\s+/g, '_').replace(/[^\w\s]/gi, '');
 
