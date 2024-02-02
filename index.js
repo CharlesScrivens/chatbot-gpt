@@ -26,7 +26,7 @@ client.on(`messageCreate`, async(message) => {
     // check if responding to bot, if ignore is on, or if it's in right channel before responding
     // and needs to ping the bot
     if (message.author.bot) return;
-    if (!message.content.startsWith(IGNORE_PREFIX)) return;
+    if (message.content.startsWith(IGNORE_PREFIX)) return;
     if (!CHANNELS.includes(message.channelId) && !message.mentions.users.has(client.user.id)) return;
 
     // looks like the bot is typing
