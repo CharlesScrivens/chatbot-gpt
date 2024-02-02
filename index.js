@@ -41,7 +41,7 @@ client.on(`messageCreate`, async(message) => {
     
     conversation.push({
         role: `system`,
-        content: `Chat GPT is a helpful bot`,
+        content: `Chat GPT is a helpful chat bot.`,
     });
 
     let prevMessages = await message.channel.messages.fetch({ limit: 10});
